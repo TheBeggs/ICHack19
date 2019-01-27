@@ -65,10 +65,9 @@ def liveFilters(hatBool, glassesBool, hatPath, glassesPath):
     global eyes_cascade;
     eyes_cascade = cv.CascadeClassifier("Classifiers/haarcascade_eye_tree_eyeglasses.xml")
     
-    if (hatBool): 
-        hat     = cv.imread(hatPath, cv.IMREAD_UNCHANGED)
-    if (glassesBool):
-        glasses = cv.imread(glassesPath, cv.IMREAD_UNCHANGED)
+
+    hat     = cv.imread(hatPath, cv.IMREAD_UNCHANGED)
+    glasses = cv.imread(glassesPath, cv.IMREAD_UNCHANGED)
 
     #-- 2. Read the video stream
     cap = cv.VideoCapture(0)
@@ -117,11 +116,9 @@ def liveFilters(hatBool, glassesBool, hatPath, glassesPath):
     cap.release()
 
 
-def stillFilters(hatBool, glassesBool, hatPath, glassesPath, picturePath):
-    if (hatBool): 
-        hat     = cv.imread(hatPath, cv.IMREAD_UNCHANGED)
-    if (glassesBool):
-        glasses = cv.imread(glassesPath, cv.IMREAD_UNCHANGED)
+def stillFilters(hatBool, glassesBool, hatPath, glassesPath, picturePath): 
+    hat     = cv.imread(hatPath, cv.IMREAD_UNCHANGED)
+    glasses = cv.imread(glassesPath, cv.IMREAD_UNCHANGED)
 
     img = cv.imread(picturePath)
     newImg = detectAndDisplay(img,hatBool, glassesBool, glasses, hat)
