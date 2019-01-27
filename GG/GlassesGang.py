@@ -61,9 +61,9 @@ def detectAndDisplay(frame, hatBool, glassesBool, glasses, hat):
 def liveFilters(hatBool, glassesBool, hatPath, glassesPath):
 
     global face_cascade;
-    face_cascade = cv.CascadeClassifier("haarcascade_frontalface_alt.xml")
+    face_cascade = cv.CascadeClassifier("Classifiers/haarcascade_frontalface_alt.xml")
     global eyes_cascade;
-    eyes_cascade = cv.CascadeClassifier("haarcascade_eye_tree_eyeglasses.xml")
+    eyes_cascade = cv.CascadeClassifier("Classifiers/haarcascade_eye_tree_eyeglasses.xml")
     
     if (hatBool): 
         hat     = cv.imread(hatPath, cv.IMREAD_UNCHANGED)
