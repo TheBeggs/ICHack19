@@ -19,12 +19,11 @@ def getFaceList(imgpath):
         minNeighbors=5
     )
 
-    print("Found {0} faces!".format(len(faces)))
 
     croppedfaces = []
 
     for (x, y, w, h) in faces:
-        croppedfaces.append(test1[y:y+h,x:x+w])
+        croppedfaces.append((x, y, w, h))
 
     return croppedfaces
 
@@ -37,7 +36,7 @@ def getEyeList(face):
     croppedeyes = []
     
     for (ex,ey,ew,eh) in eyes:
-        croppedeyes.append(face[y:y+h,x:x+w])      
+        croppedeyes.append((ex,ey,ew,eh))      
     
 
     return croppedeyes
