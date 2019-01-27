@@ -24,8 +24,6 @@ def detectAndDisplay(frame, hatBool, glassesBool, glasses, hat):
                     frame[top:top+hatResize.shape[0], x:x+hatResize.shape[1], c] = alpha1 * RGBHat[:,:,c] + beta1 * frame[top:top+hatResize.shape[0], x:x+hatResize.shape[1], c]
             else:
                 for c in range(0, 3):
-                    print (hatResize.shape)
-                    print(beta1.shape)
                     frame[0:top+hatResize.shape[0], x:x+hatResize.shape[1], c] = alpha1[top * -1:,:] * hatResize[top * -1:, :, c] + beta1[top * -1:,:] * frame[0:top+hatResize.shape[0], x:x+hatResize.shape[1], c]
         
         if (glassesBool):
@@ -78,7 +76,7 @@ def liveFilters(hatBool, glassesBool, hatPath, glassesPath):
     count = 0;
 
     if not cap.isOpened:
-        print('--(!)Error opening video capture')
+        print('--(!)Oops opening video capture')
         exit(0)
     while (True):
         now = time.time()
@@ -111,19 +109,32 @@ def liveFilters(hatBool, glassesBool, hatPath, glassesPath):
         
 
         elapsed = time.time() - now  # how long was it running?
-        while(1/30 > elapsed):
+        while(1/60 > elapsed):
             elapsed = time.time() - now
     cap.release()
+    cv.destroyAllWindows()
 
-
-def stillFilters(hatBool, glassesBool, hatPath, glassesPath, picturePath): 
+def stillFilters(hatBool, glassesBool, hatPath, glassesPath, picturePath):
+    global face_cascade;
+    face_cascade = cv.CascadeClassifier("Classifiers/haarcascade_frontalface_alt.xml")
+    global eyes_cascade;
+    eyes_cascade = cv.CascadeClassifier("Classifiers/haarcascade_eye_tree_eyeglasses.xml")
     hat     = cv.imread(hatPath, cv.IMREAD_UNCHANGED)
     glasses = cv.imread(glassesPath, cv.IMREAD_UNCHANGED)
 
     img = cv.imread(picturePath)
     newImg = detectAndDisplay(img,hatBool, glassesBool, glasses, hat)
+    name = "My Pictures/picture"
+    filenumber = 0
+    while(True):
+        filename = name + str(filenumber) + ".jpg"
+        if (not os.path.isfile(filename)):
+             break
+        filenumber += 1
 
-    cv.imshow('Output Image', newImg) 
+            
+    cv.imwrite(filename, newImg)
+    cv.imshow('Output Image', newImg)
     cv.waitKey(0) 
     cv.destroyAllWindows()
     
