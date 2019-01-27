@@ -12,7 +12,6 @@ def getFaceList(imgpath):
 
     faceCascade = cv2.CascadeClassifier(cascPath)
 
-    haar_face_cascade = cv2.CascadeClassifier(cascPath)
 
     faces = faceCascade.detectMultiScale(
         equal_img,
@@ -29,5 +28,16 @@ def getFaceList(imgpath):
 
     return croppedfaces
 
+def getEyeList(face):
+    cascPath = "haarcascade_eyes.xml"
+    grayFace = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+    eyeCascade = cv2.CascadeClassifier(cascPath)
+    eyes = eyeCascade.detectMultiScale(grayFace)
 
+    croppedeyes = []
+    
+    for (ex,ey,ew,eh) in eyes:
+        croppedeyes.append(face[y:y+h,x:x+w])      
+    
 
+    return croppedeyes
