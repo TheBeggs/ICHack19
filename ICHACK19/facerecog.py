@@ -2,8 +2,8 @@ from __future__ import print_function
 import cv2 as cv
 import time
 
-level_map = [(0,0,10,10)]
-glasses = cv.imread("glasses.png", cv.IMREAD_UNCHANGED);
+glasses = cv.imread("glasses.png", cv.IMREAD_UNCHANGED)
+hat     = cv.imread("tophat.png", cv.IMREAD_UNCHANGED)
 
 def detectAndDisplay(frame):
     
@@ -12,6 +12,24 @@ def detectAndDisplay(frame):
     #-- Detect faces
     faces = face_cascade.detectMultiScale(frame_gray)
     for (x,y,w,h) in faces:
+        top = y - 4 * (h//5)
+        hatResize = cv.resize(hat, (0,0), fx = w/hat.shape[1] , fy = w/hat.shape[0])
+        alpha1 = hatResize[:, :, 3] / 255.0
+        beta1 = 1.0 - alpha1
+        RGBHat = hatResize[:,:,:3]
+
+        if (top > 0 and hatResize.shape[0] != 0) :
+            for c in range(0, 3):
+                frame[top:top+hatResize.shape[0], x:x+hatResize.shape[1], c] = alpha1 * RGBHat[:,:,c] + beta1 * frame[top:top+hatResize.shape[0], x:x+hatResize.shape[1], c]
+        else:
+            for c in range(0, 3):
+                print (hatResize.shape)
+                print(beta1.shape)
+                frame[0:top+hatResize.shape[0], x:x+hatResize.shape[1], c] = alpha1[top * -1:,:] * hatResize[top * -1:, :, c] + beta1[top * -1:,:] * frame[0:top+hatResize.shape[0], x:x+hatResize.shape[1], c]
+
+            #frame[0:top+hatResize.shape[0], x:x+hatResize.shape[1]] = hatResize[top * -1:,:, :3]
+        
+        
         faceROI = frame_gray[y:y+h,x:x+w]
         #-- In each face, detect eyes
         eyes = eyes_cascade.detectMultiScale(faceROI)
@@ -23,11 +41,6 @@ def detectAndDisplay(frame):
             else:
                 left = eyes[1]
                 right = eyes[0]
-
-            
-                
-
-            
             x1 = right[0]
             x2 = left[0] + left[2]
             
@@ -126,8 +139,12 @@ while (True):
     newFrame = detectAndDisplay(frame)
     cv.imshow('Glasses Gang', frame)
     
-    if cv.waitKey(1) == 27:
+    keypress = cv.waitKey(1)
+    if keypress == 27:
         break
+    elif keypress == 112:
+        cv.imwrite("Picture_capture.jpg", newFrame)
+    
 
     elapsed = time.time() - now  # how long was it running?
     while(1/30 > elapsed):
